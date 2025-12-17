@@ -1,4 +1,6 @@
 package MVC.View.Panels;
 
-public class MessagePanel {
+import javax.swing.*;
+
+public class MessagePanel extends JPanel {
 }

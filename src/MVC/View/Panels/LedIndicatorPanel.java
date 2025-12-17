@@ -1,4 +1,6 @@
 package MVC.View.Panels;
 
-public class LedIndicatorPanel {
+import javax.swing.*;
+
+public class LedIndicatorPanel extends JPanel {
 }
