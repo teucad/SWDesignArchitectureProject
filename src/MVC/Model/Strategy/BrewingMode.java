@@ -1,6 +1,6 @@
-package Patterns.Strategy;
+package MVC.Model.Strategy;
 
-public interface BrewingTea {
+public interface BrewingMode {
     int getDurationMillis();
     String getOperationName();
 }

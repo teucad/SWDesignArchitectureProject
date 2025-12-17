@@ -1,11 +1,9 @@
-package Patterns.Observer;
+package MVC.Model.Observer;
 
-import Patterns.State.TeaMakerState;
+import MVC.Model.State.TeaMakerState;
 
 public interface Observer {
     void onStateChanged(TeaMakerState state);
-
-    void onButtonsEnabled(boolean filled, boolean start, boolean boil);
 
     void onMessageChanged(String message);
 

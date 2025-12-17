@@ -1,14 +1,13 @@
 package MVC.Model;
 
 import Database.TeaLogToDB;
-import Patterns.Observer.Observer;
-import Patterns.Observer.Subject;
-import Patterns.Observer.TeaMakerObserver;
-import Patterns.State.States.EmptyState;
-import Patterns.State.TeaMakerState;
-import Patterns.Strategy.BrewingTea;
-import Service.CupStatsService;
-import Service.TimerService;
+import MVC.Model.Observer.Observer;
+import MVC.Model.Observer.Subject;
+import MVC.Model.State.EmptyState;
+import MVC.Model.State.TeaMakerState;
+import MVC.Model.Strategy.BrewingMode;
+import MVC.Model.Service.CupStatsService;
+import MVC.Model.Service.TimerService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +15,7 @@ import java.util.List;
 public class TeaMakerMachine implements Subject {
     TeaMakerState state = new EmptyState();
     int cups = 0;
-    BrewingTea strategy;
+    BrewingMode mode;
     public List<Observer> observers;
     TimerService timerService;
     CupStatsService cupStatsService;
@@ -27,7 +26,7 @@ public class TeaMakerMachine implements Subject {
         this.cupStatsService = cupStatsService;
         this.teaLogToDB = teaLogToDB;
         this.observers = new ArrayList<>();
-        strategy = null;
+        mode = null;
     }
 
 
@@ -58,13 +57,19 @@ public class TeaMakerMachine implements Subject {
         state.onTimerExpired(this);
     }
 
-    public void setStrategy(BrewingTea strategy) {
-        this.strategy = strategy;
+    public void setStrategy(BrewingMode mode) {
+        this.mode = mode;
     }
 
     public void notifyMessage(String msg) {
         //TODO: Implement this method.
     }
+
+    //Todo: Implement the following methods after making the GUI.
+    public void enableDisableButtons(boolean filled, boolean start, boolean boil) {
+
+    }
+
 
     @Override
     public void addObserver(Observer o) {

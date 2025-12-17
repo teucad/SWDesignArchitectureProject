@@ -1,4 +1,4 @@
-package Service;
+package MVC.Model.Service;
 
 
 import Database.TeaLogToDB;

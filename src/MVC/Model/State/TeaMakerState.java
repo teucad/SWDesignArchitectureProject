@@ -1,4 +1,4 @@
-package Patterns.State;
+package MVC.Model.State;
 
 import MVC.Model.TeaMakerMachine;
 

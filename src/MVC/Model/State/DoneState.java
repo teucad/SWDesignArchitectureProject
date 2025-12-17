@@ -1,7 +1,6 @@
-package Patterns.State.States;
+package MVC.Model.State;
 
 import MVC.Model.TeaMakerMachine;
-import Patterns.State.TeaMakerState;
 
 public class DoneState implements TeaMakerState {
     @Override
@@ -16,12 +15,12 @@ public class DoneState implements TeaMakerState {
 
     @Override
     public void onBoilWater(TeaMakerMachine machine) {
-        machine.notifyMessage("The machine is boiling water.");
-        machine.setState(new BoilingWaterState());
+        machine.notifyMessage("Please reset the machine to its initial state first.");
     }
 
     @Override
     public void onReset(TeaMakerMachine machine) {
+        machine.setState(new EmptyState());
         machine.notifyMessage("The machine has been emptied. Please fill cups.");
     }
 
@@ -29,6 +28,7 @@ public class DoneState implements TeaMakerState {
     public void onTimerExpired(TeaMakerMachine machine) {
         // No timer is needed when the machine is not running.
         // Therefore, this method was left empty intentionally.
+        // Get it?
     }
 
     @Override

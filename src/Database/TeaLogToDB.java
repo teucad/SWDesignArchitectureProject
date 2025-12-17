@@ -13,7 +13,7 @@ public class TeaLogToDB {
     }
 
     public void insertLog(LocalDate date) throws SQLException {
-        Connection conn = DBConnection.getConnection();
+        Connection conn = DBConnectionProvider.getConnection();
 
         String line = "INSERT INTO tea_log (cups, log_date) VALUES (?, ?)";
         PreparedStatement stmt = conn.prepareStatement(line);
@@ -26,7 +26,7 @@ public class TeaLogToDB {
     }
 
     public int getDailyTotal(LocalDate date) throws SQLException {
-        Connection conn = DBConnection.getConnection();
+        Connection conn = DBConnectionProvider.getConnection();
         String line = "SELECT SUM(cups) FROM tea_log WHERE log_date = ?";
         PreparedStatement stmt = conn.prepareStatement(line);
         stmt.setDate(1, Date.valueOf(date));
@@ -34,7 +34,7 @@ public class TeaLogToDB {
         return  rs.getInt(1);
     }
     public int getMonthlyTotal(YearMonth month) throws SQLException {
-        Connection conn = DBConnection.getConnection();
+        Connection conn = DBConnectionProvider.getConnection();
 
         LocalDate startMonth = month.atDay(1);
         LocalDate endMonth = month.atEndOfMonth();

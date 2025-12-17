@@ -1,4 +1,4 @@
-package Patterns.Observer;
+package MVC.Model.Observer;
 
 public interface Subject {
 

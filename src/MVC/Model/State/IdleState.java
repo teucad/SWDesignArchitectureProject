@@ -1,9 +1,8 @@
-package Patterns.State.States;
+package MVC.Model.State;
 
 import MVC.Model.TeaMakerMachine;
-import Patterns.State.TeaMakerState;
-import Patterns.Strategy.Strategies.BoilWater;
-import Patterns.Strategy.Strategies.MakeTea;
+import MVC.Model.Strategy.BoilWater;
+import MVC.Model.Strategy.MakeTea;
 
 public class IdleState implements TeaMakerState {
     @Override
@@ -14,25 +13,28 @@ public class IdleState implements TeaMakerState {
         }
 
         machine.setCups(cups);
-        machine.notifyMessage("Cups were updated to: " + cups);
+        machine.notifyMessage("Cup amount were updated to: " + cups);
     }
 
     @Override
     public void onStart(TeaMakerMachine machine) {
         machine.setStrategy(new MakeTea());
         machine.setState(new MakingTeaState());
+        machine.notifyMessage("The machine is being initiated to make tea.");
     }
 
     @Override
     public void onBoilWater(TeaMakerMachine machine) {
         machine.setStrategy(new BoilWater());
         machine.setState(new BoilingWaterState());
+        machine.notifyMessage("The machine is being initiated to boil water.");
     }
 
     @Override
     public void onReset(TeaMakerMachine machine) {
         machine.stopTimer();
         machine.setState(new EmptyState());
+        machine.notifyMessage("The machine has been emptied. Please fill cups.");
     }
 
     @Override

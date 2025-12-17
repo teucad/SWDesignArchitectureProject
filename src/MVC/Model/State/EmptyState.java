@@ -1,8 +1,6 @@
-package Patterns.State.States;
+package MVC.Model.State;
 
 import MVC.Model.TeaMakerMachine;
-import Patterns.Decorator.Decorators.WarningDecorator;
-import Patterns.State.TeaMakerState;
 
 public class EmptyState implements TeaMakerState {
 

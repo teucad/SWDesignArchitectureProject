@@ -1,7 +1,6 @@
-package Patterns.State.States;
+package MVC.Model.State;
 
 import MVC.Model.TeaMakerMachine;
-import Patterns.State.TeaMakerState;
 
 public class MakingTeaState implements TeaMakerState {
     @Override
@@ -11,7 +10,7 @@ public class MakingTeaState implements TeaMakerState {
 
     @Override
     public void onStart(TeaMakerMachine machine) {
-        machine.notifyMessage("Busy: Making tea.");
+        machine.notifyMessage("Making tea.");
     }
 
     @Override
@@ -29,6 +28,7 @@ public class MakingTeaState implements TeaMakerState {
     @Override
     public void onTimerExpired(TeaMakerMachine machine) {
         machine.setState(new DoneState());
+        machine.notifyMessage("Your tea is ready! Enjoy.");
     }
 
     @Override

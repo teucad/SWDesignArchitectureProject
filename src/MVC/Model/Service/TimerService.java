@@ -1,4 +1,4 @@
-package Service;
+package MVC.Model.Service;
 
 import java.util.Timer;
 import java.util.TimerTask;
