@@ -1,7 +1,7 @@
 package MVC.Model.Decorator;
 
 
-import MVC.Model.State.TeaMakerState;
+import MVC.Model.State.MachineState;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -11,9 +11,9 @@ public class DefaultMessage extends Message {
 
     private final String day;
     private final LocalDate date;
-    private final TeaMakerState state;
+    private final MachineState state;
 
-    public DefaultMessage(LocalDate date, TeaMakerState state) {
+    public DefaultMessage(LocalDate date, MachineState state) {
         this.day = computeDayOfWeek(date);
         this.date = date;
         this.state = state;

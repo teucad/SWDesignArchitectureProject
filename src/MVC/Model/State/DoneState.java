@@ -2,7 +2,7 @@ package MVC.Model.State;
 
 import MVC.Model.TeaMakerMachine;
 
-public class DoneState implements TeaMakerState {
+public class DoneState implements MachineState {
     @Override
     public void onFilled(TeaMakerMachine machine, int cups) {
         machine.notifyMessage("Machine is empty. Please fill cups and try again.");

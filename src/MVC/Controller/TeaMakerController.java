@@ -1,7 +1,7 @@
 package MVC.Controller;
 
 import MVC.Model.Observer.Observer;
-import MVC.Model.State.TeaMakerState;
+import MVC.Model.State.MachineState;
 import MVC.Model.TeaMakerMachine;
 import MVC.View.TeaMakerFrame;
 
@@ -15,14 +15,14 @@ public class TeaMakerController implements Observer {
     }
 
     @Override
-    public void onStateChanged(TeaMakerState state) {
+    public void onStateChanged(MachineState state) {
         machine.setState(state);
     }
 
 
     @Override
     public void onMessageChanged(String message) {
-
+        machine.notifyMessage(message);
     }
 
     @Override

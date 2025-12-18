@@ -2,7 +2,7 @@ package MVC.Model.State;
 
 import MVC.Model.TeaMakerMachine;
 
-public interface TeaMakerState {
+public interface MachineState {
 
     @Override
     String toString();

@@ -2,7 +2,7 @@ package MVC.Model.State;
 
 import MVC.Model.TeaMakerMachine;
 
-public class EmptyState implements TeaMakerState {
+public class EmptyState implements MachineState {
 
 
     @Override

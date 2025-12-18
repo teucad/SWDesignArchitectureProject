@@ -7,7 +7,7 @@ import MVC.Model.TeaMakerMachine;
 
 import java.time.LocalDate;
 
-public class BoilingWaterState implements TeaMakerState {
+public class BoilingWaterState implements MachineState {
 
     LocalDate currentDate = LocalDate.now();
 

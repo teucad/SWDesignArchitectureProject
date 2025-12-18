@@ -3,17 +3,16 @@ package MVC.Model;
 import Database.TeaLogToDB;
 import MVC.Model.Observer.Observer;
 import MVC.Model.Observer.Subject;
-import MVC.Model.State.EmptyState;
-import MVC.Model.State.TeaMakerState;
-import MVC.Model.Strategy.BrewingMode;
 import MVC.Model.Service.CupStatsService;
 import MVC.Model.Service.TimerService;
-
+import MVC.Model.State.EmptyState;
+import MVC.Model.State.MachineState;
+import MVC.Model.Strategy.BrewingMode;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TeaMakerMachine implements Subject {
-    TeaMakerState state = new EmptyState();
+    MachineState state = new EmptyState();
     int cups = 0;
     BrewingMode mode;
     public List<Observer> observers;
@@ -30,7 +29,7 @@ public class TeaMakerMachine implements Subject {
     }
 
 
-    public void setState(TeaMakerState state) {
+    public void setState(MachineState state) {
         this.state = state;
     }
 
@@ -85,7 +84,7 @@ public class TeaMakerMachine implements Subject {
         timerService.stopTimer();
     }
 
-    public TeaMakerState getState() {
+    public MachineState getState() {
         return state;
     }
 }

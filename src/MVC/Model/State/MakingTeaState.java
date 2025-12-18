@@ -2,7 +2,7 @@ package MVC.Model.State;
 
 import MVC.Model.TeaMakerMachine;
 
-public class MakingTeaState implements TeaMakerState {
+public class MakingTeaState implements MachineState {
     @Override
     public void onFilled(TeaMakerMachine machine, int cups) {
         machine.notifyMessage("Cannot change cups while making tea.");

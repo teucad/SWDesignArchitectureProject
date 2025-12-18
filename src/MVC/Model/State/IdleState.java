@@ -4,7 +4,7 @@ import MVC.Model.TeaMakerMachine;
 import MVC.Model.Strategy.BoilWater;
 import MVC.Model.Strategy.MakeTea;
 
-public class IdleState implements TeaMakerState {
+public class IdleState implements MachineState {
     @Override
     public void onFilled(TeaMakerMachine machine, int cups) {
         if(cups < 0) {
