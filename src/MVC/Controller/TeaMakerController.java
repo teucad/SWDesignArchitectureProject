@@ -27,6 +27,6 @@ public class TeaMakerController implements Observer {
 
     @Override
     public void onMonthlyTotalChanged(int total) {
-
+        view.setCups(total);
     }
 }
