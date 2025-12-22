@@ -1,13 +1,18 @@
 package MVC.Model.Decorator;
 
-public class HealthWarningDecorator extends Message {
+import MVC.Model.State.MachineState;
+
+public class HealthWarningDecorator extends DefaultMessage {
 
     private final DefaultMessage defaultMessage;
+    private final MachineState machineState;
     private final int todayTotalCups;
 
-    public HealthWarningDecorator(DefaultMessage defaultMessage, int todayTotalCups) {
+    public HealthWarningDecorator(DefaultMessage defaultMessage, int todayTotalCups, MachineState machineState) {
         this.defaultMessage = defaultMessage;
+        this.machineState = machineState;
         this.todayTotalCups = todayTotalCups;
+        super(machineState);
     }
 
     @Override

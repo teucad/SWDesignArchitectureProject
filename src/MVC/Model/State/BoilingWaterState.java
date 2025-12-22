@@ -11,28 +11,29 @@ public class BoilingWaterState implements MachineState {
 
     LocalDate currentDate = LocalDate.now();
 
+
     @Override
     public void onFilled(TeaMakerMachine machine, int cups) {
-        machine.notifyMessage(new BoilingWaterMessage(new DefaultMessage(currentDate, this)).getMessage());
+        machine.notifyMessage(new BoilingWaterMessage(new DefaultMessage(this)).getMessage());
     }
 
     @Override
     public void onStart(TeaMakerMachine machine) {
-        machine.notifyMessage(new BoilingWaterMessage(new DefaultMessage(currentDate, this)).getMessage());
+        machine.notifyMessage(new BoilingWaterMessage(new DefaultMessage(this)).getMessage());
     }
 
     @Override
     public void onBoilWater(TeaMakerMachine machine) {
         machine.setState(new BoilingWaterState());
         machine.enableDisableButtons(false, false, false);
-        machine.notifyMessage(new BoilingWaterMessage(new DefaultMessage(currentDate, this)).getMessage());
+        machine.notifyMessage(new BoilingWaterMessage(new DefaultMessage(this)).getMessage());
     }
 
     @Override
     public void onReset(TeaMakerMachine machine) {
         machine.stopTimer();
         machine.setState(new EmptyState());
-        machine.notifyMessage(new ResetMessage(new DefaultMessage(currentDate, this)).getMessage());
+        machine.notifyMessage(new ResetMessage(new DefaultMessage(this)).getMessage());
     }
 
     @Override

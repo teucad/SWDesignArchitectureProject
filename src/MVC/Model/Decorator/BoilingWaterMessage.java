@@ -2,9 +2,9 @@ package MVC.Model.Decorator;
 
 public class BoilingWaterMessage extends Message {
 
-    Message message;
+    DefaultMessage message;
 
-    public BoilingWaterMessage(Message message) {
+    public BoilingWaterMessage(DefaultMessage message) {
         this.message =  message;
     }
 

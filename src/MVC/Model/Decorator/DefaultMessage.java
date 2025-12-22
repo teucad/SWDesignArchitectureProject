@@ -13,7 +13,8 @@ public class DefaultMessage extends Message {
     private final LocalDate date;
     private final MachineState state;
 
-    public DefaultMessage(LocalDate date, MachineState state) {
+    public DefaultMessage(MachineState state) {
+        LocalDate date = LocalDate.now();
         this.day = computeDayOfWeek(date);
         this.date = date;
         this.state = state;

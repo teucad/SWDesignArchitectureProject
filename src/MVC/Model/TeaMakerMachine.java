@@ -19,6 +19,7 @@ public class TeaMakerMachine implements Subject {
     TimerService timerService;
     CupStatsService cupStatsService;
     TeaLogToDB teaLogToDB;
+    private final java.beans.PropertyChangeSupport pcs = new java.beans.PropertyChangeSupport(this);
 
     public TeaMakerMachine(CupStatsService cupStatsService, TeaLogToDB teaLogToDB){
         this.timerService = new TimerService();
@@ -28,9 +29,14 @@ public class TeaMakerMachine implements Subject {
         mode = null;
     }
 
+    public void addStateListener(java.beans.PropertyChangeListener l) {
+        pcs.addPropertyChangeListener("state", l);
+    }
 
-    public void setState(MachineState state) {
-        this.state = state;
+    public void setState(MachineState newState) {
+        MachineState old = this.state;
+        this.state = newState;
+        pcs.firePropertyChange("state", old, newState);
     }
 
     public void filled(int cups) {

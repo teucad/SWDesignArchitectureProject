@@ -18,11 +18,10 @@ public class CupStatsService{
     }
 
     public int getDailyTotal() throws SQLException{
-        LocalDate today = LocalDate.now();
-        return logdb.getDailyTotal(today);
+        return logdb.getDailyTotal(LocalDate.now());
     }
 
-    public int getMonthlyTotal() throws SQLException{
+    public String getMonthlyTotal() throws SQLException{
         YearMonth curMonth = YearMonth.now();
         return logdb.getMonthlyTotal(curMonth);
     }

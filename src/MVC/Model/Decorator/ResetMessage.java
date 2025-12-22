@@ -3,9 +3,9 @@ package MVC.Model.Decorator;
 
 public class ResetMessage extends Message {
 
-    Message message;
+    DefaultMessage message;
 
-    public ResetMessage(Message message) {
+    public ResetMessage(DefaultMessage message) {
         this.message = message;
     }
 
