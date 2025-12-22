@@ -1,11 +1,14 @@
 package MVC.Model;
 
-import Database.TeaLogToDB;
+import MVC.Controller.Database.TeaLogToDB;
+import MVC.Model.Decorator.DefaultMessage;
+import MVC.Model.Decorator.Message;
 import MVC.Model.Observer.Observer;
 import MVC.Model.Observer.Subject;
 import MVC.Model.Service.CupStatsService;
 import MVC.Model.Service.TimerService;
 import MVC.Model.State.EmptyState;
+import MVC.Model.State.IdleState;
 import MVC.Model.State.MachineState;
 import MVC.Model.Strategy.BrewingMode;
 import java.util.ArrayList;
@@ -15,6 +18,7 @@ public class TeaMakerMachine implements Subject {
     MachineState state = new EmptyState();
     int cups = 0;
     BrewingMode mode;
+    DefaultMessage message;
     public List<Observer> observers;
     TimerService timerService;
     CupStatsService cupStatsService;
@@ -26,6 +30,7 @@ public class TeaMakerMachine implements Subject {
         this.cupStatsService = cupStatsService;
         this.teaLogToDB = teaLogToDB;
         this.observers = new ArrayList<>();
+        this.message = new DefaultMessage(state);
         mode = null;
     }
 
@@ -67,7 +72,20 @@ public class TeaMakerMachine implements Subject {
     }
 
     public void notifyMessage(String msg) {
-        //TODO: Implement this method.
+        message.extendMessage(msg);
+    }
+
+    public Message getMessage() {
+        return message;
+    }
+
+
+    public String getMessageString() {
+        return message.getMessage();
+    }
+
+    public void setMessage(DefaultMessage message) {
+        this.message = message;
     }
 
     //Todo: Implement the following methods after making the GUI.

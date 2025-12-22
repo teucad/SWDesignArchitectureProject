@@ -1,4 +1,4 @@
-package Database;
+package MVC.Controller.Database;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -6,19 +6,19 @@ import java.time.YearMonth;
 
 public class TeaLogToDB {
 
-    public int cupAmount;
 
-    public TeaLogToDB(){
-        cupAmount = 0;
+    public TeaLogToDB() {
+
     }
 
-    public void insertLog(LocalDate date) throws SQLException {
+    public void insertLog(int cupAmount) throws SQLException {
+        LocalDate date =  LocalDate.now();
         Connection conn = DBConnectionProvider.getConnection();
 
         String line = "INSERT INTO tea_log (cups, log_date) VALUES (?, ?)";
         PreparedStatement stmt = conn.prepareStatement(line);
 
-        stmt.setInt(1, this.cupAmount);
+        stmt.setInt(1, cupAmount);
         stmt.setDate(2, Date.valueOf(date));
 
         stmt.executeUpdate();
@@ -32,8 +32,11 @@ public class TeaLogToDB {
         PreparedStatement stmt = conn.prepareStatement(line);
         stmt.setDate(1, Date.valueOf(date));
         ResultSet rs = stmt.executeQuery();
-        return  rs.getInt(1);
+        if (rs.next())
+            return rs.getInt(1);
+        return 0;
     }
+
     public String getMonthlyTotal(YearMonth month) throws SQLException {
         Connection conn = DBConnectionProvider.getConnection();
 
@@ -46,9 +49,8 @@ public class TeaLogToDB {
         stmt.setDate(2, Date.valueOf(endMonth));
 
         ResultSet rs = stmt.executeQuery();
-        if(rs.next()) {
+        if (rs.next())
             return String.valueOf(rs.getInt("sum(cups)"));
-        }
         return "";
     }
 }

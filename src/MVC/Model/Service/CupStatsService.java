@@ -1,7 +1,7 @@
 package MVC.Model.Service;
 
 
-import Database.TeaLogToDB;
+import MVC.Controller.Database.TeaLogToDB;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -30,8 +30,5 @@ public class CupStatsService{
         return getDailyTotal() >= dailyLimit;
     }
 
-    public void updateCupsDB() {
-        logdb.cupAmount ++;
-    }
 
 }

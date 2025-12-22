@@ -1,4 +1,4 @@
-package Database;
+package MVC.Controller.Database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

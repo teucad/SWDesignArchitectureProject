@@ -3,6 +3,9 @@ package MVC.Model.State;
 import MVC.Model.TeaMakerMachine;
 
 public class DoneState implements MachineState {
+
+    public static final DoneState INSTANCE = new DoneState();
+
     @Override
     public void onFilled(TeaMakerMachine machine, int cups) {
         machine.notifyMessage("Machine is empty. Please fill cups and try again.");

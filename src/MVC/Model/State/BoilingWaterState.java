@@ -10,7 +10,7 @@ import java.time.LocalDate;
 public class BoilingWaterState implements MachineState {
 
     LocalDate currentDate = LocalDate.now();
-
+    public static final BoilingWaterState INSTANCE = new BoilingWaterState();
 
     @Override
     public void onFilled(TeaMakerMachine machine, int cups) {

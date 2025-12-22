@@ -1,6 +1,6 @@
 package App;
 
-import Database.TeaLogToDB;
+import MVC.Controller.Database.TeaLogToDB;
 import MVC.Model.Service.CupStatsService;
 import MVC.Model.TeaMakerMachine;
 import MVC.View.TeaMakerFrame;

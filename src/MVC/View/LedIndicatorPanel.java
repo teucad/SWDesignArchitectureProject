@@ -1,4 +1,4 @@
-package MVC.View.Panels;
+package MVC.View;
 
 
 
@@ -25,6 +25,8 @@ public class LedIndicatorPanel extends JPanel {
     public void setActive(boolean active) {
         label.setBackground(active ? Color.YELLOW : Color.LIGHT_GRAY);
         label.setForeground(active ? Color.BLACK : Color.DARK_GRAY);
+        label.repaint();
+        label.revalidate();
     }
 
 

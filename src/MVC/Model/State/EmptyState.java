@@ -4,6 +4,7 @@ import MVC.Model.TeaMakerMachine;
 
 public class EmptyState implements MachineState {
 
+    public static final EmptyState INSTANCE = new EmptyState();
 
     @Override
     public void onFilled(TeaMakerMachine machine, int cups) {

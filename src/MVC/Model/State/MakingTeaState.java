@@ -3,6 +3,10 @@ package MVC.Model.State;
 import MVC.Model.TeaMakerMachine;
 
 public class MakingTeaState implements MachineState {
+
+
+    public static final MakingTeaState INSTANCE = new MakingTeaState();
+
     @Override
     public void onFilled(TeaMakerMachine machine, int cups) {
         machine.notifyMessage("Cannot change cups while making tea.");

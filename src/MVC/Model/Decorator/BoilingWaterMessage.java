@@ -10,6 +10,7 @@ public class BoilingWaterMessage extends Message {
 
     @Override
     public String getMessage() {
-        return message.getMessage() + "\nBUSY: Boiling Water";
+        message.extendMessage("\nBUSY: Boiling Water.");
+        return message.getMessage();
     }
 }

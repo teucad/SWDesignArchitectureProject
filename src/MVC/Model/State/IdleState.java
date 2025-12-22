@@ -5,6 +5,9 @@ import MVC.Model.Strategy.BoilWater;
 import MVC.Model.Strategy.MakeTea;
 
 public class IdleState implements MachineState {
+
+    public static final IdleState INSTANCE = new IdleState();
+
     @Override
     public void onFilled(TeaMakerMachine machine, int cups) {
         if(cups < 0) {

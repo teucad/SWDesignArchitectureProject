@@ -12,12 +12,14 @@ public class DefaultMessage extends Message {
     private final String day;
     private final LocalDate date;
     private final MachineState state;
+    private String message;
 
     public DefaultMessage(MachineState state) {
         LocalDate date = LocalDate.now();
         this.day = computeDayOfWeek(date);
         this.date = date;
         this.state = state;
+        this.message = "";
     }
 
     @Override
@@ -29,5 +31,10 @@ public class DefaultMessage extends Message {
     public static String computeDayOfWeek(LocalDate date) {
         return date.getDayOfWeek().getDisplayName(java.time.format.TextStyle.FULL, Locale.ENGLISH);
     }
+
+    public void extendMessage(String msg) {
+        this.message += getMessage() + msg;
+    }
+
 
 }

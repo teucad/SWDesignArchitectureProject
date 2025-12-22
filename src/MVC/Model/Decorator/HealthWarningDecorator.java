@@ -17,6 +17,7 @@ public class HealthWarningDecorator extends DefaultMessage {
 
     @Override
     public String getMessage() {
-        return defaultMessage.getMessage() + "\nWARNING: The number of total cups today has reached to " +  todayTotalCups + ".";
+        defaultMessage.extendMessage("\nWARNING: The number of total cups today has reached to " +  todayTotalCups + ".");
+        return defaultMessage.getMessage();
     }
 }
