@@ -7,22 +7,23 @@ import MVC.Model.Observer.Observer;
 import MVC.Model.Observer.Subject;
 import MVC.Model.Service.CupStatsService;
 import MVC.Model.Service.TimerService;
-import MVC.Model.State.EmptyState;
-import MVC.Model.State.IdleState;
-import MVC.Model.State.MachineState;
+import MVC.Model.State.*;
 import MVC.Model.Strategy.BrewingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class TeaMakerMachine implements Subject {
     MachineState state = new EmptyState();
     int cups = 0;
     BrewingMode mode;
-    DefaultMessage message;
-    public List<Observer> observers;
+    Message message;
+    public List<Consumer<Message>> observers;
     TimerService timerService;
     CupStatsService cupStatsService;
     TeaLogToDB teaLogToDB;
+
+
     private final java.beans.PropertyChangeSupport pcs = new java.beans.PropertyChangeSupport(this);
 
     public TeaMakerMachine(CupStatsService cupStatsService, TeaLogToDB teaLogToDB){
@@ -34,9 +35,6 @@ public class TeaMakerMachine implements Subject {
         mode = null;
     }
 
-    public void addStateListener(java.beans.PropertyChangeListener l) {
-        pcs.addPropertyChangeListener("state", l);
-    }
 
     public void setState(MachineState newState) {
         MachineState old = this.state;
@@ -71,8 +69,8 @@ public class TeaMakerMachine implements Subject {
         this.mode = mode;
     }
 
-    public void notifyMessage(String msg) {
-        message.extendMessage(msg);
+    public void notifyMessage(Message m) {
+        for (var l : observers) l.accept(m);
     }
 
     public Message getMessage() {
@@ -84,20 +82,23 @@ public class TeaMakerMachine implements Subject {
         return message.getMessage();
     }
 
-    public void setMessage(DefaultMessage message) {
+    public void setMessage(Message message) {
         this.message = message;
     }
 
     //Todo: Implement the following methods after making the GUI.
-    public void enableDisableButtons(boolean filled, boolean start, boolean boil) {
-
-    }
 
 
     @Override
-    public void addObserver(Observer o) {
+    public void addObserver(Consumer<Message> o) {
      observers.add(o);
     }
+
+    public BrewingMode getMode() {
+        return mode;
+    }
+
+
 
     @Override
     public void removeObserver(Observer o) {
@@ -107,6 +108,8 @@ public class TeaMakerMachine implements Subject {
     public void stopTimer() {
         timerService.stopTimer();
     }
+
+
 
     public MachineState getState() {
         return state;

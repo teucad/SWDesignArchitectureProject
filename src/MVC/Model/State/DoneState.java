@@ -1,5 +1,9 @@
 package MVC.Model.State;
 
+import MVC.Model.Decorator.DefaultMessage;
+import MVC.Model.Decorator.EmptyAlreadyMessage;
+import MVC.Model.Decorator.EmptyMessage;
+import MVC.Model.Decorator.ResetRequestMessage;
 import MVC.Model.TeaMakerMachine;
 
 public class DoneState implements MachineState {
@@ -8,23 +12,23 @@ public class DoneState implements MachineState {
 
     @Override
     public void onFilled(TeaMakerMachine machine, int cups) {
-        machine.notifyMessage("Machine is empty. Please fill cups and try again.");
+        machine.notifyMessage(new EmptyAlreadyMessage(new DefaultMessage(this)));
     }
 
     @Override
     public void onStart(TeaMakerMachine machine) {
-        machine.notifyMessage("Please reset the machine to its initial state first.");
+        machine.notifyMessage(new ResetRequestMessage(new DefaultMessage(this)));
     }
 
     @Override
     public void onBoilWater(TeaMakerMachine machine) {
-        machine.notifyMessage("Please reset the machine to its initial state first.");
+        machine.notifyMessage(new ResetRequestMessage(new DefaultMessage(this)));
     }
 
     @Override
     public void onReset(TeaMakerMachine machine) {
         machine.setState(new EmptyState());
-        machine.notifyMessage("The machine has been emptied. Please fill cups.");
+        machine.notifyMessage(new EmptyMessage(new DefaultMessage(this)));
     }
 
     @Override

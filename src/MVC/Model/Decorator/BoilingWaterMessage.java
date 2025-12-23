@@ -1,8 +1,8 @@
 package MVC.Model.Decorator;
 
-public class BoilingWaterMessage extends Message {
+public class BoilingWaterMessage implements Message {
 
-    DefaultMessage message;
+    Message message;
 
     public BoilingWaterMessage(DefaultMessage message) {
         this.message =  message;
@@ -10,7 +10,6 @@ public class BoilingWaterMessage extends Message {
 
     @Override
     public String getMessage() {
-        message.extendMessage("\nBUSY: Boiling Water.");
-        return message.getMessage();
+        return message.getMessage() + "\nBoiling Water..";
     }
 }

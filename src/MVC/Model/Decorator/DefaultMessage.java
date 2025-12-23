@@ -7,33 +7,26 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
-public class DefaultMessage extends Message {
+public class DefaultMessage implements Message {
 
-    private final String day;
-    private final LocalDate date;
     private final MachineState state;
-    private String message;
+    private final String message;
 
     public DefaultMessage(MachineState state) {
         LocalDate date = LocalDate.now();
-        this.day = computeDayOfWeek(date);
-        this.date = date;
+        String day = computeDayOfWeek(date);
         this.state = state;
-        this.message = "";
+        String dateAsStr = date.format(DateTimeFormatter.ISO_LOCAL_DATE);
+        this.message =  "Day: " + day + " | Date: " + dateAsStr + " | State:" + state.toString();
     }
 
     @Override
     public String getMessage() {
-        String dateAsStr = date.format(DateTimeFormatter.ISO_LOCAL_DATE);
-        return "Day: " + day + " | Date: " + dateAsStr + " | State:" + state.toString();
+        return message;
     }
 
     public static String computeDayOfWeek(LocalDate date) {
         return date.getDayOfWeek().getDisplayName(java.time.format.TextStyle.FULL, Locale.ENGLISH);
-    }
-
-    public void extendMessage(String msg) {
-        this.message += getMessage() + msg;
     }
 
 

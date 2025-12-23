@@ -1,11 +1,11 @@
 package MVC.Model.Decorator;
 
 
-public class ResetMessage extends Message {
+public class ResetMessage implements Message {
 
-    DefaultMessage message;
+    Message message;
 
-    public ResetMessage(DefaultMessage message) {
+    public ResetMessage(Message message) {
         this.message = message;
     }
 

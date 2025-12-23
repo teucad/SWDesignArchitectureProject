@@ -1,8 +1,10 @@
 package MVC.Model.Decorator;
 
-public abstract class Message {
+public interface Message {
 
-    public abstract String getMessage();
+    String getMessage();
+
+
 
 
 }

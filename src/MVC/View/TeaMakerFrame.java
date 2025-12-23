@@ -1,13 +1,11 @@
 package MVC.View;
 
 import MVC.Controller.Database.TeaLogToDB;
-import MVC.Model.Decorator.DefaultMessage;
 import MVC.Model.Decorator.HealthWarningDecorator;
 import MVC.Model.Decorator.Message;
 import MVC.Model.Service.CupStatsService;
 import MVC.Model.State.*;
 import MVC.Model.TeaMakerMachine;
-
 import java.awt.*;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -18,15 +16,24 @@ public class TeaMakerFrame extends JFrame {
 
     private final CupStatsService cupStatsService;
     private final TeaMakerMachine machine;
-    private LedIndicatorPanel idleLed, teaLed, boilLed, doneLed;
+    private LedIndicatorPanel emptyLed, idleLed, teaLed, boilLed, doneLed;
+    private JTextArea messagesArea;
     int cups;
     private final TeaLogToDB teaLogToDB;
+    JButton filledButton = new  JButton("FILLED");
+    JButton startButton = new  JButton("MAKE TEA");
+    JButton boilWaterButton = new JButton("BOIL WATER");
+    JButton resetButton = new JButton("RESET");
+    JButton setCupsButton = new  JButton("SET CUPS");
+    JTextField cupAmount = new JTextField(10);
 
     public TeaMakerFrame(TeaMakerMachine machine, CupStatsService cupStatsService) {
         this.cupStatsService = cupStatsService;
         this.machine = machine;
         teaLogToDB = new TeaLogToDB();
-
+        machine.addObserver(m ->
+                SwingUtilities.invokeLater(() -> appendMessage(m.getMessage()))
+        );
     }
 
     public void run() throws SQLException {
@@ -48,7 +55,7 @@ public class TeaMakerFrame extends JFrame {
         // Initialize the center area that displays the messages, controls and the LED indicators.
         JPanel center = new JPanel(new  BorderLayout(10, 0));
 
-        center.add(new JLabel("Selected cups: " + cups), BorderLayout.EAST);
+        center.add(new JLabel("Selected cups: " + this.cups), BorderLayout.EAST);
 
         center.add(controls, BorderLayout.WEST);
         center.add(statesLED, BorderLayout.NORTH);
@@ -66,7 +73,6 @@ public class TeaMakerFrame extends JFrame {
         setTitle("Tea Making Machine");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
-        setMinimumSize(new Dimension(700, 450));
         setLocationRelativeTo(null);
         setVisible(true);
     }
@@ -90,13 +96,12 @@ public class TeaMakerFrame extends JFrame {
             JPanel notifs = new JPanel(new BorderLayout());
             notifs.setBorder(BorderFactory.createTitledBorder("Messages / Warnings / Notifications"));
 
-            JTextArea notifsArea = new JTextArea(8, 25);
-            notifsArea.setEditable(false);
-            notifsArea.setLineWrap(true);
-            notifsArea.setWrapStyleWord(true);
-            notifsArea.setText(machine.getMessageString());
-            JScrollPane scroll = new JScrollPane(notifsArea);
-            scroll.setPreferredSize(new Dimension(200, 150)); // helps prevent collapse
+            messagesArea = new JTextArea(8, 25);
+            messagesArea.setEditable(false);
+            messagesArea.setLineWrap(true);
+            messagesArea.setWrapStyleWord(true);
+            messagesArea.setText(machine.getMessageString());
+            JScrollPane scroll = new JScrollPane(messagesArea);
 
             notifs.add(scroll, BorderLayout.CENTER);
             return notifs;
@@ -104,15 +109,8 @@ public class TeaMakerFrame extends JFrame {
 
     private JPanel buildControlPanel() {
         JPanel control = new JPanel();
-        control.setPreferredSize(new Dimension(220, 0));
-        control.setMaximumSize(new Dimension(220, 0));
         control.setLayout(new BoxLayout(control, BoxLayout.Y_AXIS));
-        JButton filledButton = new  JButton("FILLED");
-        JButton startButton = new  JButton("MAKE TEA");
-        JButton boilWaterButton = new JButton("BOIL WATER");
-        JButton resetButton = new JButton("RESET");
-        JButton setCupsButton = new  JButton("SET CUPS");
-        JTextField cupAmount = new JTextField(10);
+
         for (JComponent c : new JComponent[]{cupAmount, filledButton, startButton, boilWaterButton, resetButton, setCupsButton}) {
             c.setAlignmentX(Component.LEFT_ALIGNMENT);
         }
@@ -128,7 +126,6 @@ public class TeaMakerFrame extends JFrame {
         initButtons(startButton,filledButton,resetButton,boilWaterButton);
         setCupsInit(setCupsButton, cupAmount);
         control.setLayout(new BoxLayout(control, BoxLayout.Y_AXIS));
-        control.setPreferredSize(new Dimension(200, 0));
 
         return control;
     }
@@ -136,11 +133,14 @@ public class TeaMakerFrame extends JFrame {
     private JPanel buildLEDBar() {
         JPanel ledBar = new JPanel(new GridLayout(1, 4, 8, 0));
 
+        emptyLed = new LedIndicatorPanel("EMPTY");
         idleLed = new LedIndicatorPanel("IDLE");
         teaLed = new LedIndicatorPanel("MAKING TEA");
         boilLed = new LedIndicatorPanel("BOIL WATER");
         doneLed = new LedIndicatorPanel("DONE");
 
+
+        ledBar.add(emptyLed);
         ledBar.add(idleLed);
         ledBar.add(teaLed);
         ledBar.add(boilLed);
@@ -152,23 +152,39 @@ public class TeaMakerFrame extends JFrame {
 
     private void setCupsInit(JButton setCups, JTextField cupAmount) {
         setCups.addActionListener(_ -> {
-        int testCups = Integer.parseInt(cupAmount.getText());
-            if(testCups <= 0 || testCups >= 20) {
-                JOptionPane.showMessageDialog(this, "Please enter a number between 1 and 20");
-                throw new ArithmeticException("No.");
+            String cupIn = cupAmount.getText().trim();
+
+            try {
+                int value = Integer.parseInt(cupIn);
+
+                if(value < 0) {
+                    appendMessage("\nCups must be a positive number.");
+                    refreshUI();
+                    return;
+                }
+                this.cups = value;
+                appendMessage("\nCups set to: " + cups);
+                revalidate();
+                repaint();
+            } catch (NumberFormatException e) {
+                appendMessage("\nInvalid value. Please enter a number.");
+                refreshUI();
             }
-            this.cups = testCups;
-            setMachineCups(cups);
-            machine.notifyMessage("Total cups was successfully updated to: " + cups);
-            this.revalidate();
-            this.repaint();
+
         });
     }
+
+    private void appendMessage(String message) {
+        messagesArea.append(message);
+        messagesArea.setCaretPosition(messagesArea.getDocument().getLength());
+    }
+
+
 
 
     private void initButtons(JButton sButton, JButton fButton, JButton rButton, JButton bButton) {
         sButton.addActionListener(_ -> {
-            machine.getState().onStart(machine);
+            machine.startTea();
             try {
                 stateAction();
             } catch (SQLException e) {
@@ -177,7 +193,7 @@ public class TeaMakerFrame extends JFrame {
         });
 
         fButton.addActionListener(_ -> {
-            machine.getState().onFilled(machine, cups);
+            machine.filled(cups);
             try {
                 stateAction();
             } catch (SQLException e) {
@@ -185,7 +201,7 @@ public class TeaMakerFrame extends JFrame {
             }
         });
         rButton.addActionListener(_ -> {
-            machine.getState().onReset(machine);
+            machine.reset();
             try{
                 stateAction();
             } catch (SQLException e) {
@@ -194,7 +210,7 @@ public class TeaMakerFrame extends JFrame {
         });
 
         bButton.addActionListener(_ -> {
-            machine.getState().onBoilWater(machine);
+            machine.boilWater();
             try {
                 stateAction();
             } catch (SQLException e) {
@@ -204,30 +220,67 @@ public class TeaMakerFrame extends JFrame {
 
     }
 
-    void setMachineCups(int cups) {
-        machine.setCups(cups);
-    }
-
     void stateAction() throws SQLException {
         if(cupStatsService.isDailyLimitExceeded()) {
             int dailyCups = cupStatsService.getDailyTotal();
             Message currentMessage = machine.getMessage();
-            currentMessage = new HealthWarningDecorator((DefaultMessage) currentMessage, dailyCups, machine.getState());
-            machine.setMessage((DefaultMessage) currentMessage);
-            this.revalidate();
-            this.repaint();
+            currentMessage = new HealthWarningDecorator(currentMessage, dailyCups, machine.getState());
+            machine.setMessage(currentMessage);
+            refreshUI();
             return;
         }
         if(machine.getState() == DoneState.INSTANCE) {
             teaLogToDB.insertLog(cups);
         }
-        updateLed(machine.getState());
-        this.revalidate();
-        this.repaint();
+        refreshUI();
     }
 
+    private void refreshUI() {
+        MachineState s = machine.getState();
+
+        updateLed(s);
+        updateButtons(s);
+
+        revalidate();
+        repaint();
+    }
+
+    private void updateButtons(MachineState state) {
+
+        // default: everything disabled
+        setCupsButton.setEnabled(false);
+        filledButton.setEnabled(false);
+        startButton.setEnabled(false);
+        boilWaterButton.setEnabled(false);
+        resetButton.setEnabled(true); // reset is usually always allowed
 
 
+        if(state instanceof EmptyState) {
+            setCupsButton.setEnabled(true);
+            filledButton.setEnabled(true);
+            startButton.setEnabled(true);
+            boilWaterButton.setEnabled(true);
+        }
+
+        if (state instanceof IdleState) {
+            setCupsButton.setEnabled(true);
+            filledButton.setEnabled(true);
+        }
+
+        else if (state instanceof MakingTeaState) {
+            // usually nothing clickable while making tea
+        }
+
+        else if (state instanceof BoilingWaterState) {
+            // also nothing clickable
+        }
+
+        else if (state instanceof DoneState) {
+            setCupsButton.setEnabled(true);
+            filledButton.setEnabled(true);
+            startButton.setEnabled(true);
+        }
+    }
     private JPanel labeledRow(JComponent field) {
         JPanel p = new JPanel(new BorderLayout(6, 0));
         p.add(new JLabel("Cups: "), BorderLayout.WEST);

@@ -2,22 +2,21 @@ package MVC.Model.Decorator;
 
 import MVC.Model.State.MachineState;
 
-public class HealthWarningDecorator extends DefaultMessage {
+public class HealthWarningDecorator implements Message {
 
-    private final DefaultMessage defaultMessage;
+    private final Message message;
     private final MachineState machineState;
     private final int todayTotalCups;
 
-    public HealthWarningDecorator(DefaultMessage defaultMessage, int todayTotalCups, MachineState machineState) {
-        this.defaultMessage = defaultMessage;
+    public HealthWarningDecorator(Message message, int todayTotalCups, MachineState machineState) {
+        this.message = message;
         this.machineState = machineState;
         this.todayTotalCups = todayTotalCups;
-        super(machineState);
     }
 
     @Override
     public String getMessage() {
-        defaultMessage.extendMessage("\nWARNING: The number of total cups today has reached to " +  todayTotalCups + ".");
-        return defaultMessage.getMessage();
+        return message.getMessage() + "\nWARNING: The number of total cups today has reached to " + todayTotalCups + ".";
     }
+
 }
