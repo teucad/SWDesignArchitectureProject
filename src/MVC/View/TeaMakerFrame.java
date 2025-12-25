@@ -18,6 +18,11 @@ public class TeaMakerFrame extends JFrame {
     private final TeaMakerMachine machine;
     private LedIndicatorPanel emptyLed, idleLed, teaLed, boilLed, doneLed;
     private JTextArea messagesArea;
+    private JLabel selectedCupsLabel;
+    private JLabel timerLabel;
+    private javax.swing.Timer countdownTimer;
+    private long timerEndMillis;
+    private MachineState lastState;
     int cups;
     private final TeaLogToDB teaLogToDB;
     JButton filledButton = new  JButton("FILLED");
@@ -34,6 +39,7 @@ public class TeaMakerFrame extends JFrame {
         machine.addObserver(m ->
                 SwingUtilities.invokeLater(() -> appendMessage(m.getMessage()))
         );
+        machine.addPropertyChangeListener(_ -> SwingUtilities.invokeLater(this::handleStateChange));
     }
 
     public void run() throws SQLException {
@@ -55,7 +61,14 @@ public class TeaMakerFrame extends JFrame {
         // Initialize the center area that displays the messages, controls and the LED indicators.
         JPanel center = new JPanel(new  BorderLayout(10, 0));
 
-        center.add(new JLabel("Selected cups: " + this.cups), BorderLayout.EAST);
+        selectedCupsLabel = new JLabel("Selected cups: " + this.cups);
+        timerLabel = new JLabel("Timer: --");
+        JPanel statusPanel = new JPanel();
+        statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.Y_AXIS));
+        statusPanel.add(selectedCupsLabel);
+        statusPanel.add(timerLabel);
+
+        center.add(statusPanel, BorderLayout.EAST);
 
         center.add(controls, BorderLayout.WEST);
         center.add(statesLED, BorderLayout.NORTH);
@@ -164,6 +177,9 @@ public class TeaMakerFrame extends JFrame {
                 }
                 this.cups = value;
                 appendMessage("\nCups set to: " + cups);
+                if (selectedCupsLabel != null) {
+                    selectedCupsLabel.setText("Selected cups: " + this.cups);
+                }
                 revalidate();
                 repaint();
             } catch (NumberFormatException e) {
@@ -243,6 +259,59 @@ public class TeaMakerFrame extends JFrame {
 
         revalidate();
         repaint();
+    }
+
+    private void handleStateChange() {
+        MachineState current = machine.getState();
+        if (lastState == null || !lastState.getClass().equals(current.getClass())) {
+            updateTimerForState(current);
+            lastState = current;
+        }
+        refreshUI();
+    }
+
+    private void updateTimerForState(MachineState state) {
+        if (state instanceof MakingTeaState || state instanceof BoilingWaterState) {
+            startCountdown();
+        } else {
+            stopCountdown();
+        }
+    }
+
+    private void startCountdown() {
+        if (timerLabel == null) {
+            return;
+        }
+        if (machine.getMode() == null) {
+            timerLabel.setText("Timer: --");
+            return;
+        }
+        timerEndMillis = System.currentTimeMillis() + machine.getMode().getDurationMillis();
+        updateTimerLabel();
+        if (countdownTimer == null) {
+            countdownTimer = new javax.swing.Timer(1000, _ -> updateTimerLabel());
+        }
+        if (!countdownTimer.isRunning()) {
+            countdownTimer.start();
+        }
+    }
+
+    private void stopCountdown() {
+        if (timerLabel == null) {
+            return;
+        }
+        if (countdownTimer != null) {
+            countdownTimer.stop();
+        }
+        timerLabel.setText("Timer: --");
+    }
+
+    private void updateTimerLabel() {
+        long remainingMillis = Math.max(0, timerEndMillis - System.currentTimeMillis());
+        long totalSeconds = remainingMillis / 1000;
+        long minutes = totalSeconds / 60;
+        long seconds = totalSeconds % 60;
+        timerLabel.setText(String.format("Timer: %d:%02d", minutes, seconds));
     }
 
     private void updateButtons(MachineState state) {

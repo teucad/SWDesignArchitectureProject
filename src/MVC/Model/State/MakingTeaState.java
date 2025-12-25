@@ -32,6 +32,7 @@ public class MakingTeaState implements MachineState {
 
     @Override
     public void onTimerExpired(TeaMakerMachine machine) {
+        machine.stopTimer();
         machine.setState(new DoneState());
         machine.notifyMessage(new TeaReadyMessage(new DefaultMessage(this)));
     }
