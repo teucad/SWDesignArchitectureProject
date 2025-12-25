@@ -54,6 +54,10 @@ public class TeaMakerMachine implements Subject {
         this.cups = cups;
     }
 
+    public int getCups() {
+        return cups;
+    }
+
     public void startTea() {
         state.onStart(this);
     }

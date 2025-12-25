@@ -6,6 +6,7 @@ import MVC.Model.Decorator.Message;
 import MVC.Model.Service.CupStatsService;
 import MVC.Model.State.*;
 import MVC.Model.TeaMakerMachine;
+import MVC.Model.Strategy.MakeTea;
 import java.awt.*;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -270,10 +271,25 @@ public class TeaMakerFrame extends JFrame {
     private void handleStateChange() {
         MachineState current = machine.getState();
         if (lastState == null || !lastState.getClass().equals(current.getClass())) {
+            logTeaCompletionIfNeeded(current);
             updateTimerForState(current);
             lastState = current;
         }
         refreshUI();
+    }
+
+    private void logTeaCompletionIfNeeded(MachineState current) {
+        if (!(current instanceof DoneState)) {
+            return;
+        }
+        if (!(machine.getMode() instanceof MakeTea)) {
+            return;
+        }
+        try {
+            teaLogToDB.insertLog(machine.getCups());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void updateTimerForState(MachineState state) {
