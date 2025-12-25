@@ -42,6 +42,10 @@ public class TeaMakerMachine implements Subject {
         pcs.firePropertyChange("state", old, newState);
     }
 
+    public void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(listener);
+    }
+
     public void filled(int cups) {
         state.onFilled(this, cups);
     }
@@ -107,6 +111,13 @@ public class TeaMakerMachine implements Subject {
 
     public void stopTimer() {
         timerService.stopTimer();
+    }
+
+    public void startTimer() {
+        if (mode == null) {
+            return;
+        }
+        timerService.startTimer(mode.getDurationMillis(), this::timerExpired);
     }
 
 
