@@ -8,7 +8,7 @@ public class TimerService {
     private Timer timer;
     private TimerTask task;
 
-    public synchronized void startTimer(int durationMillis, Runnable callBack) throws InterruptedException {
+    public synchronized void startTimer(int durationMillis, Runnable callBack) {
 
         stopTimer();
 

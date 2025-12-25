@@ -36,6 +36,7 @@ public class BoilingWaterState implements MachineState {
 
     @Override
     public void onTimerExpired(TeaMakerMachine machine) {
+        machine.stopTimer();
         machine.setState(new DoneState());
         machine.notifyMessage(new JobDoneMessage(new DefaultMessage(this), machine));
 

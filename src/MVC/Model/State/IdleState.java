@@ -23,6 +23,7 @@ public class IdleState implements MachineState {
         machine.setStrategy(new MakeTea());
         machine.setState(new MakingTeaState());
         machine.notifyMessage(new initMakeTeaMessage(new DefaultMessage(this)));
+        machine.startTimer();
     }
 
     @Override
@@ -30,6 +31,7 @@ public class IdleState implements MachineState {
         machine.setStrategy(new BoilWater());
         machine.setState(new BoilingWaterState());
         machine.notifyMessage(new initBoilWaterMessage(new DefaultMessage(this)));
+        machine.startTimer();
     }
 
     @Override
