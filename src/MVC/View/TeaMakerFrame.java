@@ -164,35 +164,38 @@ public class TeaMakerFrame extends JFrame {
     }
 
     private void setCupsInit(JButton setCups, JTextField cupAmount) {
-        setCups.addActionListener(event -> {
-            String cupIn = cupAmount.getText().trim();
-
-            try {
-                int value = Integer.parseInt(cupIn);
-
-                if(value < 0) {
-                    appendMessage("\nCups must be a positive number.");
-                    refreshUI();
-                    return;
-                }
-                this.cups = value;
-                appendMessage("\nCups set to: " + cups);
-                if (selectedCupsLabel != null) {
-                    selectedCupsLabel.setText("Selected cups: " + this.cups);
-                }
-                revalidate();
-                repaint();
-            } catch (NumberFormatException e) {
-                appendMessage("\nInvalid value. Please enter a number.");
-                refreshUI();
-            }
-
-        });
+        setCups.addActionListener(event -> readCupsFromField(cupAmount));
     }
 
     private void appendMessage(String message) {
         messagesArea.append(message);
         messagesArea.setCaretPosition(messagesArea.getDocument().getLength());
+    }
+
+    private boolean readCupsFromField(JTextField cupAmountField) {
+        String cupIn = cupAmountField.getText().trim();
+
+        try {
+            int value = Integer.parseInt(cupIn);
+
+            if (value <= 0) {
+                appendMessage("\nCups must be a positive number.");
+                refreshUI();
+                return false;
+            }
+            this.cups = value;
+            appendMessage("\nCups set to: " + cups);
+            if (selectedCupsLabel != null) {
+                selectedCupsLabel.setText("Selected cups: " + this.cups);
+            }
+            revalidate();
+            repaint();
+            return true;
+        } catch (NumberFormatException e) {
+            appendMessage("\nInvalid value. Please enter a number.");
+            refreshUI();
+            return false;
+        }
     }
 
 
@@ -209,6 +212,9 @@ public class TeaMakerFrame extends JFrame {
         });
 
         fButton.addActionListener(event -> {
+            if (!readCupsFromField(cupAmount)) {
+                return;
+            }
             machine.filled(cups);
             try {
                 stateAction();
